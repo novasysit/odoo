@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="partner_form_view_inherit">
+             <field name="name">res.partner.form.view.inherit</field>
+             <field name="model">res.partner</field>
+             <field name="inherit_id" ref="base.view_partner_form"/>
+             <field name="arch" type="xml">
+               <xpath expr="//div[@class='o_row']" position="after">
+                  <group>
+                   <field name="id_number"/>
+                  </group>
+               </xpath>
+             </field>
+         </record>
+     </data>
+ </odoo>
