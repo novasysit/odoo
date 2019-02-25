@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data>
+      <template id="custoner_statement_v11_css_assets" name="Custmer statement css asset" inherit_id="web.report_assets_common">
+          <xpath expr="." position="inside">
+              <link rel="stylesheet" type="text/css" href="/customer_statement/static/src/css/statement.css"/>
+          </xpath>
+      </template>
+
+      <template id="customer_statement.report_overdue_document">
+          <t t-call="web.external_layout">
+              <t t-set="doc" t-value="doc.with_context({'lang':doc.lang})" />
+              <div class="page">
+                <link href="https://fonts.googleapis.com/css?family=Lora" rel="stylesheet"/>
+                <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet"/>
+                <div class="row">
+                      <div style="margin-top: 15px; float:left; margin-left: 20px;">
+                          <ul class="list-unstyled text-left;">
+                              <li><strong>Customer Address:</strong></li>
+                              <li><span  t-if="doc.name"  t-esc="doc.name"/></li>
+                              <li><span  t-if="doc.street"><span t-field="doc.street"/></span></li>
+                              <li><span  t-if="doc.street2"> <span t-field="doc.street2"/></span></li>
+                              <li><span  t-if="doc.city"> <span t-field="doc.city"/></span></li>
+                              <li><span  t-if="doc.zip"><span t-field="doc.zip"/></span></li>
+                              <li><span  t-if="doc.country_id" > <span t-field="doc.country_id.name"/></span></li>
+                              <li><span  t-if="doc.mobile">Mobile: <span  t-field="doc.mobile"/></span></li>
+                              <li><span  t-if="doc.phone">Phone: <span  t-field="doc.phone"/></span></li>
+                              <li><span  t-if="doc.email">Email: <span t-field="doc.email"/></span></li>
+                          </ul>
+                      </div>
+                      <div style="margin-top: 15px; float:right; margin-right: 20px;">
+                        <ul class="list-unstyled">
+                          <li>Document: Customer Account Statement</li>
+                          <li>To: <span t-field="doc.name"/></li>
+                          <li>Date: <span t-esc="doc.get_report_values(doc.id)[3]"/></li>
+                          <!-- <li>Transaction Start Date: <span t-esc="statement_start_date"/></li>
+                          <li>Transaction End Date: <span t-esc="statement_date"/></li> -->
+                          <li><t t-if="doc.ref">Customer ref: <span t-field="doc.ref"/></t></li>
+                        </ul>
+                      </div>
+                    </div>
+                    <div style="margin-top: 15px; float:right; margin-right: 20px;">
+                       <table class="table table-condensed pull-right jam">
+                           <tr>
+                               <td><strong class="text-left">Start Date </strong></td>
+                               <td class="text-right">
+                                  <span t-esc="doc.get_report_values(doc.id)[0]"/>
+                               </td>
+                           </tr>
+                       </table>
+                   </div>
+                    <div class="row" style="margin-left: 1px; margin-right: 1px;">
+                    <t t-if="doc.get_report_values(doc.id)">
+                        <table style="border: none !important;" class="table table-condensed">
+                            <thead class="jam">
+                                <tr>
+                                    <th class="text-left">Reference number</th>
+                                    <th  class="text-left">Type</th>
+                                    <th class="text-left">Date</th>
+                                    <th class="text-left">Debit</th>
+                                    <th class="text-left">Credit</th>
+                                    <th class="text-center">Balance</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            <tr t-foreach="doc.get_report_values(doc.id)[2]" t-as="line">
+                                <td>
+                                    <span t-esc="line['move_id']"/>
+                                </td>
+                                <td>
+                                    <span t-esc="line['type']"/>
+                                </td>
+                                <td>
+                                    <span t-esc="line['date']"/>
+                                </td>
+
+                                <td class="text-left">
+                                    <span t-esc="line['debit']" t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"/>
+                                </td>
+                                <td class="text-left">
+                                    <span t-esc="line['credit']" t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"/>
+                                </td>
+                                <td class="text-center">
+                                    <span t-esc="line['balance']" t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"/>
+                                </td>
+                            </tr>
+
+                          </tbody>
+                        </table>
+                        <table class="table table-bordered 1px solid black !important jam">
+                            <tr style="font-weight:bold border-bottom:1px solid black !important">
+                                <td class="text-right" style="border-right: 1px solid black !important; border-left: 1px solid black !important; border-bottom: 1px solid black !important; border-top: 1px solid black !important"><strong>120+ Days</strong></td><!-- style="font-family: 'Lora', serif; color: #c9a364;"-->
+                                <td class="text-right" style="border-right: 1px solid black !important ; border-bottom: 1px solid black !important; border-top: 1px solid black !important"><strong>90 Days</strong></td><!--style="font-family: 'Lora', serif; color: #c9a364;"-->
+                                <td class="text-right" style="border-right: 1px solid black !important; border-bottom: 1px solid black !important; border-top: 1px solid black !important"><strong>60 Days</strong></td><!--style="font-family: 'Lora', serif; color: #c9a364;"-->
+                                <td class="text-right" style="border-right: 1px solid black !important; border-bottom: 1px solid black !important; border-top: 1px solid black !important"><strong>30 Days</strong></td><!--style="font-family: 'Lora', serif; color: #c9a364;"-->
+                                <td class="text-right" style="border-right: 1px solid black !important; border-bottom: 1px solid black !important; border-top: 1px solid black !important"><strong>Current</strong></td><!--style="font-family: 'Lora', serif; color: #c9a364;"-->
+                            </tr>
+
+                            <tr style="border-bottom:1pt solid black !important" t-foreach="doc.get_report_values(doc.id)[4]" t-as="line">
+                                <td class="text-right" style="border-right: 1px solid black !important; border-left: 1px solid black !important; "><span t-esc="(line['previous_120'])" t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"/></td>
+                                <td class="text-right" style="border-right: 1px solid black !important; "><span t-esc="(line['previous_90'])" t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"/></td>
+                                <td class="text-right" style="border-right: 1px solid black !important; "><span t-esc="(line['previous_60'])" t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"/></td>
+                                <td class="text-right" style="border-right: 1px solid black !important; "><span t-esc="(line['previous_30'])" t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"/></td>
+                                <td class="text-right" style="border-right: 1px solid black !important; "><span t-esc="(line['current'])" t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"/></td>
+                            </tr>
+                        </table>
+                        <div class="pull-right">
+                            <table class="table table-condensed pull-right jam">
+                                <tr>
+                                     <td> <strong class="text-left">End Date </strong></td>
+                                    <td class="text-right">
+                                        <span t-esc="doc.get_report_values(doc.id)[1]"/>
+                                    </td>
+                                    <td><strong class="text-left">Account Balance </strong></td>
+                                    <td class="text-right" t-foreach="doc.get_report_values(doc.id)[4]" t-as="line">
+                                        <span t-esc="(line['previous_120'] + line['previous_90'] + line['previous_60'] + line['previous_30'] + line['current'])" t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"/><!--style="font-family: 'Montserrat', sans-serif; color: #414042;" -->
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </t>
+                    <p t-if="not doc.get_report_values(doc.id)">
+                        <strong>There are no transections for this customer.</strong>
+                    </p>
+                </div>
+              </div>
+          </t>
+      </template>
+
+      <template id="report_overdue_custom">
+          <t t-call="web.html_container">
+              <t t-foreach="docs" t-as="doc">
+                  <t t-call="customer_statement.report_overdue_document" t-lang="doc.lang"/>
+              </t>
+          </t>
+      </template>
+      <report
+          id="action_report_overdue_custom"
+          model="res.partner"
+          report_type="qweb-pdf"
+          string="Customer statement"
+          name="customer_statement.report_overdue_custom"
+          file="customer_statement.report_overdue_custom"
+          print_report_name="'Customer Statement - %s' % (object.name)"
+      />
+
+      <record id="paperformat_portrait_custom_overdue" model="report.paperformat">
+          <field name="name">Statement Overdue Portrait A4</field>
+          <field name="default" eval="False" />
+          <field name="format">A4</field>
+          <field name="orientation">Portrait</field>
+          <field name="margin_top">55</field>
+          <field name="margin_bottom">40</field>
+          <field name="margin_left">15</field>
+          <field name="margin_right">7</field>
+          <field name="header_line" eval="False" />
+          <field name="header_spacing">37</field>
+          <field name="dpi">90</field>
+     </record>
+     <record id="email_customer_statements" model="mail.template">
+          <field name="name">Customer Statement Email Template</field>
+          <field name="email_from">${object.user_id.email}</field>
+          <field name="subject">Customer Statement</field>
+          <field name="email_to">${object.email}</field>
+          <field name="reply_to">${object.company_id.email}</field>
+          <field name="auto_delete" eval="False" />
+          <field name="model_id" ref="base.model_res_partner"/>
+          <field name="report_template" ref="customer_statement.action_report_overdue_custom"/>
+          <field name="lang"></field>
+          <field name="body_html"></field>
+      </record>
+
+  </data>
+</odoo>

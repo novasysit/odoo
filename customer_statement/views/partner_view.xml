@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="partner_form_custom" model="ir.ui.view">
+            <field name="name">custoner_statement.partner_form</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form/sheet" position="before">
+                    <header>
+                        <button name="print_statement" type="object"
+                            string="Customer Statement"/>
+                    </header>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

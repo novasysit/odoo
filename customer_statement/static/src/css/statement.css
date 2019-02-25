@@ -1,0 +1,11 @@
+.peanut td, .peanut th {
+    border: none !important;
+}
+
+.jam tr, .jam td {
+	border: none !important;
+}
+
+.marmite tr, .marmite th {
+	border: none !important;
+}

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="print_statement_form_custom" model="ir.ui.view">
+            <field name="name">customer_statement.statement.form</field>
+            <field name="model">customer.statement</field>
+            <field name="arch" type="xml">
+                <form string="Customer Statement">
+                    <group>
+                        <field name="start_date"/>
+                        <field name="end_date"/>
+                    </group>
+                    <footer>
+                        <button string="Print" type="object" name="action_print" icon="gtk-print"/>
+                        or
+                        <button string="Send" type="object" name="action_send"/>
+                        or
+                        <button special="cancel" string="Cancel" icon="gtk-cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+        <record id="action_print_statement" model="ir.actions.act_window">
+            <field name="name">Customer Statement</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="print_statement_form_custom"/>
+            <field name="target">new</field>
+        </record>
+    </data>
+</openerp>

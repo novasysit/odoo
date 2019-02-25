@@ -1,0 +1,17 @@
+{
+    "name": "Standard Customer Statement Odoo 11",
+    "version": "1.0",
+    "depends": ["base", "account", "web", "account_reports_followup"],
+    "author": "SystemWorks",
+    "category": "Accounting",
+    "description": "Customer statement.",
+    "data": [
+             'wizards/statement.xml',
+             'views/partner_view.xml',
+             'reports/account_overdue_custom_report.xml',
+             'views/report_overdue.xml'
+            ],
+    "test": [],
+    "installable": True,
+    "active": False
+}
