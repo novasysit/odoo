@@ -28,7 +28,7 @@
                 <li class="list-inline-item">Bank Details:</li>
                 <li class="list-inline-item">FNB Account: 62750665104</li>
                 <li class="list-inline-item">Branch: 252445</li>
-                <li class="list-inline-item">Reference: <span t-field="doc.name"/></li>
+                <li class="list-inline-item">Reference: <span t-field="o.name"/></li>
               </ul>
                 <div t-field="company.report_footer"/>
                 <div t-if="report_type == 'pdf'">
