@@ -14,7 +14,7 @@
     ],
     'data': [
         'views/res_partner_view.xml',
-        # 'views/web_layout.xml',
+        'views/web_layout.xml',
     ],
     'installable': True,
     'auto_install': False
