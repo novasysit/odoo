@@ -1,38 +1,40 @@
-<?xml version="1.0"?>
-<template name="web.external_layout_boxed">
-    <div class="header">
-        <div class="o_boxed_header">
-        <div class="row mb8">
-            <div class="col-6">
-                <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" alt="Logo"/>
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="web.external_layout_boxed">
+        <div class="header">
+            <div class="o_boxed_header">
+            <div class="row mb8">
+                <div class="col-6">
+                    <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" alt="Logo"/>
+                </div>
+                <div class="col-6 text-right mb4">
+    		           <br><strong>NOVASYS IT (PTY) LTD</strong></br>
+    		           <br>Reg: 2018/058452/07 | VAT: 4190282055</br>
+    		           <br>Address: 222 Landshut Drive, Centurion, 1683</br>
+    		           <br>Tel: 012 942 4242 | Email: support@novasys.co.za</br>
+              </div>
             </div>
-            <div class="col-6 text-right mb4">
-		           <br><strong>NOVASYS IT (PTY) LTD</strong></br>
-		           <br>Reg: 2018/058452/07 | VAT: 4190282055</br>
-		           <br>Address: 222 Landshut Drive, Centurion, 1683</br>
-		           <br>Tel: 012 942 4242 | Email: support@novasys.co.za</br>
-          </div>
-        </div>
-        </div>
-    </div>
-
-    <div class="article o_report_layout_boxed" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">
-        <t t-call="web.address_layout"/>
-        <t t-raw="0"/>
-    </div>
-
-    <div class="footer o_boxed_footer">
-        <div class="text-center">
-          <ul class="list-inline">
-            <li class="list-inline-item">Bank Details:</li>
-            <li class="list-inline-item">FNB Account: 62750665104</li>
-            <li class="list-inline-item">Branch: 252445</li>
-            <li class="list-inline-item">Reference: <span t-field="doc.name"/></li>
-          </ul>
-            <div t-field="company.report_footer"/>
-            <div t-if="report_type == 'pdf'">
-                Page: <span class="page"/> / <span class="topage"/>
             </div>
         </div>
-    </div>
-</template>
+
+        <div class="article o_report_layout_boxed" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">
+            <t t-call="web.address_layout"/>
+            <t t-raw="0"/>
+        </div>
+
+        <div class="footer o_boxed_footer">
+            <div class="text-center">
+              <ul class="list-inline">
+                <li class="list-inline-item">Bank Details:</li>
+                <li class="list-inline-item">FNB Account: 62750665104</li>
+                <li class="list-inline-item">Branch: 252445</li>
+                <li class="list-inline-item">Reference: <span t-field="doc.name"/></li>
+              </ul>
+                <div t-field="company.report_footer"/>
+                <div t-if="report_type == 'pdf'">
+                    Page: <span class="page"/> / <span class="topage"/>
+                </div>
+            </div>
+        </div>
+    </template>
+</odoo>
