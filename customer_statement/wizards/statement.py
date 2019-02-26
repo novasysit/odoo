@@ -373,7 +373,8 @@ class customer_statement(models.TransientModel):
     end_date = fields.Date('End Date', required=True, help='The End date of the statement.')
     start_date = fields.Date(string='Start Date',
                                        required=True,
-                                       help='The Start date of the statement.')
+                                       help='The Start date of the statement.',
+				       default=time.strftime('%Y-%m-01'))
 
     @api.multi
     def action_print(self):
