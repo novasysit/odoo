@@ -22,7 +22,7 @@ class Partner(models.Model):
 
     def print_statement(self):
         dummy, view_id = self.env['ir.model.data'].get_object_reference\
-                                           ('customer_statement', 'print_statement_form_custom')
+                                           ('customer_statement_email', 'print_statement_form_custom')
 
         return {
             'name':"Customer Statement",

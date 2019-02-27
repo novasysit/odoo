@@ -1,7 +1,10 @@
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 import logging
 import math
 import json, time, datetime
+from odoo.tools.misc import formatLang, format_date
+from odoo.tools import append_content_to_html, DEFAULT_SERVER_DATE_FORMAT
+from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
@@ -24,6 +27,7 @@ def last_day_of_month(date):
 class ReportOverdue(models.Model):
     _inherit = 'res.partner'
 
+    wizard_print = fields.Boolean('Print/Email from a wizard')
     # end_date = fields.Date('End Date', required=True, help='The End date of the statement.')
     # start_date = fields.Date(string='Start Date',
     #                                    required=True,
@@ -366,7 +370,7 @@ class ReportOverdue(models.Model):
         ]
 
 
-class customer_statement(models.TransientModel):
+class customer_statement_email(models.TransientModel):
     _name = 'customer.statement'
 
     partner_id = fields.Many2one('res.partner', 'Partner')
@@ -383,14 +387,63 @@ class customer_statement(models.TransientModel):
         partners = partner_obj.search([('id', 'in', active_ids)])
         for partner in partners:
             partner.wizard_print = True
-        return self.env.ref('customer_statement.action_report_overdue_custom').report_action(partners)
+        return self.env.ref('customer_statement_email.action_report_overdue_custom').report_action(partners)
 
     @api.multi
     def action_send(self):
         partner_obj = self.env['res.partner']
         statement_obj = self.env['account.followup.report']
         if self._context.get('active_ids'):
-            partners = partner_obj.search([('id', 'in', [self._context.get('active_id')])])
+            partners = partner_obj.search([('id', 'in', self._context.get('active_ids'))])
             for partner in partners:
                 partner.wizard_print = True
-            return statement_obj.send_email({'partner_id': self._context.get('active_id')})
+                statement_obj.send_email({'partner_id': partner.id})
+        return True
+
+
+class CustomerFollowupt(models.AbstractModel):
+    _inherit = "account.followup.report"
+
+    @api.model
+    def send_email(self, options):
+
+        partner = self.env['res.partner'].browse(options.get('partner_id'))
+        email = self.env['res.partner'].browse(partner.address_get(['invoice'])['invoice']).email
+        template = self.env.ref('customer_statement_email.email_sustomer_statements')
+        template_obj = self.env['mail.template']
+        mail_mail_obj = self.env['mail.mail']
+        attachment_obj = self.env['ir.attachment']
+        if email and email.strip():
+            values = template.generate_email(partner.id)
+            atta_id = ''
+            for attachment in values.get('attachments', []):
+                attachment_data = {
+                    'name': partner.name + ' Customer Statement',
+                    'datas_fname': "Wine Cellar Customer Statement.pdf",
+                    'datas': attachment[1],
+                    'res_model': 'res.partner',
+                    'res_id': partner.id
+                }
+                atta_id = (attachment_obj.create(attachment_data).id)
+            body_html = self.with_context(print_mode=True, mail=True, keep_summary=True).get_html(options)
+            html_body = b'<style>table {display:none}</style>'
+            body_html = html_body + body_html
+            msg = _('Follow-up email sent to %s') % email
+            msg += '<br>' + body_html.decode('utf-8')
+            msg_id = partner.message_post(body=msg, subtype='account_reports.followup_logged_action')
+            msg_id.write({'attachment_ids': [(6, 0, [atta_id])]})
+            email = self.env['mail.mail'].with_context(default_mail_message_id=msg_id).create({
+                'subject': _('%s Customer Statement') % (self.env.user.company_id.name) + ' - ' + partner.name,
+                'body_html': append_content_to_html(body_html, self.env.user.signature or '', plaintext=False),
+                'email_from': self.env.user.email or '',
+                'email_to': email,
+                'body': msg,
+            })
+            return True
+        raise UserError(_('Could not send mail to partner because it does not have any email address defined'))
+
+    def print_followup(self, options, params):
+        partner_id = params.get('partner')
+        partner_obj = self.env['res.partner']
+        partners = partner_obj.search([('id', '=', partner_id)])
+        return self.env.ref('customer_statement_email.action_report_overdue_custom').report_action(partners)

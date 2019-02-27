@@ -3,11 +3,11 @@
   <data>
       <template id="custoner_statement_v11_css_assets" name="Custmer statement css asset" inherit_id="web.report_assets_common">
           <xpath expr="." position="inside">
-              <link rel="stylesheet" type="text/css" href="/customer_statement/static/src/css/statement.css"/>
+              <link rel="stylesheet" type="text/css" href="/customer_statement_email/static/src/css/statement.css"/>
           </xpath>
       </template>
 
-      <template id="customer_statement.report_overdue_document">
+      <template id="customer_statement_email.report_overdue_document">
           <t t-call="web.external_layout">
               <t t-set="doc" t-value="doc.with_context({'lang':doc.lang})" />
               <div class="page">
@@ -129,7 +129,7 @@
       <template id="report_overdue_custom">
           <t t-call="web.html_container">
               <t t-foreach="docs" t-as="doc">
-                  <t t-call="customer_statement.report_overdue_document" t-lang="doc.lang"/>
+                  <t t-call="customer_statement_email.report_overdue_document" t-lang="doc.lang"/>
               </t>
           </t>
       </template>
@@ -138,8 +138,17 @@
           model="res.partner"
           report_type="qweb-pdf"
           string="Customer statement"
-          name="customer_statement.report_overdue_custom"
-          file="customer_statement.report_overdue_custom"
+          name="customer_statement_email.report_overdue_custom"
+          file="customer_statement_email.report_overdue_custom"
+          print_report_name="'Customer Statement - %s' % (object.name)"
+      />
+      <report
+          id="account_reports.action_report_followup"
+          model="res.partner"
+          report_type="qweb-pdf"
+          string="Print Follow-up Letter"
+          name="customer_statement_email.report_overdue_custom"
+          file="customer_statement_email.report_overdue_custom"
           print_report_name="'Customer Statement - %s' % (object.name)"
       />
 
@@ -155,6 +164,19 @@
           <field name="header_line" eval="False" />
           <field name="header_spacing">37</field>
           <field name="dpi">90</field>
+     </record>
+
+     <record id="email_sustomer_statements" model="mail.template">
+         <field name="name">Cellar Invoice Email Template</field>
+         <field name="email_from">${object.user_id.email}</field>
+         <field name="subject">${object.name}</field>
+         <field name="email_to">${object.email}</field>
+         <field name="reply_to"></field>
+         <field name="auto_delete" eval="False" />
+         <field name="model_id" ref="base.model_res_partner"/>
+         <field name="report_template" ref="customer_statement_email.action_report_overdue_custom"/>
+         <field name="lang"></field>
+         <field name="body_html"></field>
      </record>
   </data>
 </odoo>
