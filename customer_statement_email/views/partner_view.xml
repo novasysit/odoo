@@ -14,5 +14,15 @@
                 </xpath>
             </field>
         </record>
+        <record id="partner_form_custom_search" model="ir.ui.view">
+            <field name="name">customer_search.partner_form</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_res_partner_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="/search/filter[@name='inactive']" position="after">
+                  <filter name="due_invoices" string="Due Invoices" domain="[('credit', '>', 0)]"/>
+                </xpath>
+            </field>
+        </record>
     </data>
 </odoo>
