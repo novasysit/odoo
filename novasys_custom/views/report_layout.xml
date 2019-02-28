@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="report_invoice_document" inherit_id="account.report_invoice_document">
+        <p t-if="o.reference" position="replace"/>
         <p name="payment_term" position="replace"/>
     </template>
 
@@ -29,7 +30,7 @@
         <div class="footer o_boxed_footer">
             <div class="text-center">
               <ul class="list-inline">
-                <li class="list-inline-item">Payment Reference: <span t-if="'number' in o" t-raw='o.number'/><span t-if="'name' in o" t-raw='o.name'/></li>
+                <li class="list-inline-item">Payment Reference: <span t-if="'reference' in o and o.reference" t-raw='o.reference'/><span t-elif="'number' in o" t-raw='o.number'/><span t-elif="'name' in o" t-raw='o.name'/></li>
                 <li class="list-inline-item">Bank: FNB</li>
                 <li class="list-inline-item">Account: 62750665104</li>
                 <li class="list-inline-item">Branch: 252445</li>
