@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="product_template_tree_view" model="ir.ui.view">
+        <field name="name">product.template.product.tree.inherit.techcoza</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_tree_view"/>
+        <field name="arch" type="xml">
+            <field name="standard_price" position="replace"/>
+        </field>
+    </record>
+
+    <record id="product.product_template_action" model="ir.actions.act_window">
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="view_id" ref="product_template_tree_view"/>
+    </record>
+
+    <record id="sale.product_template_action" model="ir.actions.act_window">
+        <field name="view_mode">tree,kanban,form,activity</field>
+        <field name="view_id" ref="product_template_tree_view"/>
+    </record>
+
+    <record id="stock.product_template_action_product" model="ir.actions.act_window">
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="view_id" ref="product_template_tree_view"/>
+    </record>
+
+    <record id="purchase.product_normal_action_puchased" model="ir.actions.act_window">
+        <field name="view_mode">tree,kanban,form,activity</field>
+        <field name="view_id" ref="product_template_tree_view"/>
+    </record>
+</odoo>

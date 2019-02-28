@@ -8,9 +8,14 @@
     'summary': 'Customisations for NOVASYS',
     'depends': [
         'base',
+        'product',
+        'purchase',
+        'sale',
+        'stock',
         'web',
     ],
     'data': [
+        'views/product_template_views.xml',
         'views/report_layout.xml',
         'views/res_partner_view.xml',
     ],
