@@ -28,6 +28,7 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="print_statement_form_custom"/>
             <field name="target">new</field>
+            <field name="context">{'wizard': True}</field>
         </record>
         <act_window name="Send Customer Statements"
             res_model="customer.statement"

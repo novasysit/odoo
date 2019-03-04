@@ -119,6 +119,9 @@
                           <td class="text-right" t-foreach="doc.get_report_values(doc.id)[4]" t-as="line">
                               <span t-esc="(line['previous_120'] + line['previous_90'] + line['previous_60'] + line['previous_30'] + line['current'])" t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"/><!--style="font-family: 'Montserrat', sans-serif; color: #414042;" -->
                           </td>
+                          <td class="text-right">
+                              <span t-esc="doc.set_wizard_print_false(doc)" invisible="1"/><!--style="font-family: 'Montserrat', sans-serif; color: #414042;" -->
+                          </td>
                       </tr>
                   </table>
               </div>
