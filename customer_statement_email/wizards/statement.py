@@ -28,10 +28,6 @@ class ReportOverdue(models.Model):
     _inherit = 'res.partner'
 
     wizard_print = fields.Boolean('Print/Email from a wizard')
-    # end_date = fields.Date('End Date', required=True, help='The End date of the statement.')
-    # start_date = fields.Date(string='Start Date',
-    #                                    required=True,
-    #                                    help='The Start date of the statement.')
 
     def _age_analysis_get(self, data, statement_date):
 

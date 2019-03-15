@@ -156,7 +156,7 @@
       />
 
       <record id="paperformat_portrait_custom_overdue" model="report.paperformat">
-          <field name="name">Statement Overdue Portrait A4</field>
+          <field name="name">Customer Statement Portrait A4</field>
           <field name="default" eval="False" />
           <field name="format">A4</field>
           <field name="orientation">Portrait</field>
@@ -170,9 +170,9 @@
      </record>
 
      <record id="email_sustomer_statements" model="mail.template">
-         <field name="name">Cellar Invoice Email Template</field>
+         <field name="name">Customer Statement Email Template</field>
          <field name="email_from">${object.user_id.email}</field>
-         <field name="subject">${object.name}</field>
+         <field name="subject">Customer Statement</field>
          <field name="email_to">${object.email}</field>
          <field name="reply_to"></field>
          <field name="auto_delete" eval="False" />
