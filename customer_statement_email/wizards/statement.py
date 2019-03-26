@@ -88,7 +88,7 @@ class ReportOverdue(models.Model):
         for line in data[::-1]:
             date = " "
             if line.full_reconcile_id:
-                dates = datetime.datetime.strptime(str(line.full_reconcile_id.create_date), '%Y-%m-%d').date()
+                dates = datetime.datetime.strptime(str(line.full_reconcile_id.create_date), '%Y-%m-%d %H:%M:%S.%f').date()
                 statement_date = datetime.datetime.strptime(str(statement_date), '%Y-%m-%d').date()
             if line.full_reconcile_id and dates < statement_date:
                 continue
