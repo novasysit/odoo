@@ -28,10 +28,6 @@ class ReportOverdue(models.Model):
     _inherit = 'res.partner'
 
     wizard_print = fields.Boolean('Print/Email from a wizard')
-    # end_date = fields.Date('End Date', required=True, help='The End date of the statement.')
-    # start_date = fields.Date(string='Start Date',
-    #                                    required=True,
-    #                                    help='The Start date of the statement.')
 
     def _age_analysis_get(self, data, statement_date):
 
@@ -92,7 +88,7 @@ class ReportOverdue(models.Model):
         for line in data[::-1]:
             date = " "
             if line.full_reconcile_id:
-                dates = datetime.datetime.strptime(line.full_reconcile_id.create_date, '%Y-%m-%d %H:%M:%S').date()
+                dates = datetime.datetime.strptime(str(line.full_reconcile_id.create_date), '%Y-%m-%d %H:%M:%S.%f').date()
                 statement_date = datetime.datetime.strptime(str(statement_date), '%Y-%m-%d').date()
             if line.full_reconcile_id and dates < statement_date:
                 continue
@@ -312,7 +308,7 @@ class ReportOverdue(models.Model):
             res[row.pop('partner_id')].append(row)
         return res, movelines, total_paid, op_balance
 
-    @api.model
+    @api.multi
     def get_report_values(self, docids, data=None):
         docids =[docids]
         partner_obj = self.env['res.partner']
@@ -340,7 +336,6 @@ class ReportOverdue(models.Model):
                 if invoices:
                     invoice = invoices[len(statements) - 1]
                     start_date = invoice.date_invoice
-            partner.wizard_print = False
             lines, movelines, total_paid, op_balance = self._lines_get(partner, end_date, start_date)
 
             a = self._lines_get2(partner, end_date)
@@ -369,6 +364,10 @@ class ReportOverdue(models.Model):
             op_balance
         ]
 
+    @api.multi
+    def set_wizard_print_false(self, partner):
+        if partner:
+            partner.wizard_print = False
 
 class customer_statement_email(models.TransientModel):
     _name = 'customer.statement'
@@ -387,7 +386,7 @@ class customer_statement_email(models.TransientModel):
         partners = partner_obj.search([('id', 'in', active_ids)])
         for partner in partners:
             partner.wizard_print = True
-        return self.env.ref('customer_statement_email.action_report_overdue_custom').report_action(partners)
+        return self.env.ref('customer_statement_email.action_report_overdue_custom').report_action(partner)
 
     @api.multi
     def action_send(self):
@@ -398,6 +397,7 @@ class customer_statement_email(models.TransientModel):
             for partner in partners:
                 partner.wizard_print = True
                 statement_obj.send_email({'partner_id': partner.id})
+                partner.wizard_print = False
         return True
 
 
@@ -419,7 +419,7 @@ class CustomerFollowupt(models.AbstractModel):
             for attachment in values.get('attachments', []):
                 attachment_data = {
                     'name': partner.name + ' Customer Statement',
-                    'datas_fname': "Wine Cellar Customer Statement.pdf",
+                    'datas_fname': partner.name + " Customer Statement.pdf",
                     'datas': attachment[1],
                     'res_model': 'res.partner',
                     'res_id': partner.id
@@ -442,8 +442,17 @@ class CustomerFollowupt(models.AbstractModel):
             return True
         raise UserError(_('Could not send mail to partner because it does not have any email address defined'))
 
-    def print_followup(self, options, params):
-        partner_id = params.get('partner')
+    @api.model
+    def print_followups(self, records):
         partner_obj = self.env['res.partner']
-        partners = partner_obj.search([('id', '=', partner_id)])
+        partners = partner_obj.search([('id', 'in', records.get('ids'))])
         return self.env.ref('customer_statement_email.action_report_overdue_custom').report_action(partners)
+
+    def _get_default_summary(self, options):
+        """
+        Override
+        Return the overdue message of the company as the summary of the report
+        """
+        partner = self.env['res.partner'].browse(options.get('partner_id'))
+        lang = partner.lang or self.env.user.lang or 'en_US'
+        return self.env.user.company_id.overdue_msg

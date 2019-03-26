@@ -119,6 +119,9 @@
                           <td class="text-right" t-foreach="doc.get_report_values(doc.id)[4]" t-as="line">
                               <span t-esc="(line['previous_120'] + line['previous_90'] + line['previous_60'] + line['previous_30'] + line['current'])" t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"/><!--style="font-family: 'Montserrat', sans-serif; color: #414042;" -->
                           </td>
+                          <td class="text-right">
+                              <span t-esc="doc.set_wizard_print_false(doc)" invisible="1"/><!--style="font-family: 'Montserrat', sans-serif; color: #414042;" -->
+                          </td>
                       </tr>
                   </table>
               </div>
@@ -153,7 +156,7 @@
       />
 
       <record id="paperformat_portrait_custom_overdue" model="report.paperformat">
-          <field name="name">Statement Overdue Portrait A4</field>
+          <field name="name">Customer Statement Portrait A4</field>
           <field name="default" eval="False" />
           <field name="format">A4</field>
           <field name="orientation">Portrait</field>
@@ -167,9 +170,9 @@
      </record>
 
      <record id="email_sustomer_statements" model="mail.template">
-         <field name="name">Cellar Invoice Email Template</field>
+         <field name="name">Customer Statement Email Template</field>
          <field name="email_from">${object.user_id.email}</field>
-         <field name="subject">${object.name}</field>
+         <field name="subject">Customer Statement</field>
          <field name="email_to">${object.email}</field>
          <field name="reply_to"></field>
          <field name="auto_delete" eval="False" />
